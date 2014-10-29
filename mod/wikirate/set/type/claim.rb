@@ -76,9 +76,10 @@ format :html do
        render_haml(:super_view=>super(args)) do
              %{
 .header-with-vote
-  = nest card.fetch(:trait=>:citation_count), :view=>:titled, :title=>"Citation"
   .header-vote
     = subformat( card.vote_count_card ).render_details
+  .header-citation
+    = nest card.fetch(:trait=>:citation_count), :view=>:titled, :title=>"Citations"
   .header-title
     = super_view
     .creator-credit
@@ -147,14 +148,6 @@ end
 
 view :missing do |args|
   _render_link args
-end
-
-view :title do |args|
-  %{ 
-    #{ args[:citation_number] }
-    #{ super args }
-    #{ optional_render :clipboard, args, :hide }
-  }
 end
 
 view :clipboard do |args|

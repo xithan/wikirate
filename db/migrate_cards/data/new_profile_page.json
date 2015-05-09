@@ -1,0 +1,151 @@
+{
+  "url": null,
+  "timestamp": "2015-05-09 13:24:21 +0200",
+  "card": {
+    "name": "export",
+    "type": "Pointer",
+    "content": "[[my contributions+*right+*structure]]\n[[my sources+*right+*structure]]\n[[my claims+*right+*structure]]\n[[my metrics+*right+*structure]]\n[[source+icon]]\n[[metric+icon]]\n[[claim+icon]]\n[[User+source+*type plus right+*structure]]\n[[User+claims+*type plus right+*structure]]\n[[User+metrics+*type plus right+*structure]]\n[[export]]\n[[User+*type+*structure]]\n[[showcase+*right+*structure]]\n[[script: showcase]]\n[[campaign+icon]]\n[[article+icon]]\n[[claim drag item]]\n[[source drag item]]\n[[article drag item]]\n[[metric drag item]]\n[[campaign drag item]]\n[[script: wikirate scripts]]\n[[style: profile page]]\n[[customized classic skin]]\n[[my metrics]]\n[[my sources]]\n[[my claims]]\n[[my campaigns]]\n[[my articles]]\n[[creator plus type search+*right+*structure]]\n[[editor plus type search+*right+*structure]]\n[[voter plus type search+*right+*structure]]",
+    "value": [
+      {
+        "name": "my contributions+*right+*structure",
+        "type": "Basic",
+        "content": "<p>{{_left+metrics|open_contribution_list;title:Metrics}}</p>\r\n<p><span>{{_left+claims|open_contribution_list;title:Claims|content;structure:claim item}}</span></p>\r\n<p><span>{{_left+sources|open;title:Sources|content;structure:source item}}</span></p>\r\n<p> </p>\r\n<p> </p>"
+      },
+      {
+        "name": "my sources+*right+*structure",
+        "type": "HTML",
+        "content": "<div role=\"tabpanel\">\r\n  <!-- Nav tabs -->\r\n  <ul class=\"nav nav-pills\" role=\"tablist\">\r\n    <li role=\"presentation\" class=\"active\"><a href=\"#created\" aria-controls=\"created\" role=\"tab\" data-toggle=\"tab\">created</a></li>\r\n    <li role=\"presentation\"><a href=\"#edited\" aria-controls=\"edited\" role=\"tab\" data-toggle=\"tab\">edited</a></li>\r\n    <li role=\"presentation\"><a href=\"#voted\" aria-controls=\"voted\" role=\"tab\" data-toggle=\"tab\">voted</a></li>\r\n  </ul>\r\n  <!-- Tab panes -->\r\n  <div class=\"tab-content\">\r\n    <div role=\"tabpanel\" class=\"tab-pane active\" id=\"created\">\r\n      {{_1+sources+creator plus type search|content|content;structure:source item}}\r\n    </div>\r\n    <div role=\"tabpanel\" class=\"tab-pane\" id=\"edited\">\r\n      {{_1+sources+editor plus type search|content|content;structure:source item}}\r\n    </div>\r\n    <div role=\"tabpanel\" class=\"tab-pane\" id=\"voted\">\r\n      {{_1+sources+voter plus type search|content|content;structure:source item}}\r\n    </div>\r\n  </div>\r\n</div>"
+      },
+      {
+        "name": "my claims+*right+*structure",
+        "type": "HTML",
+        "content": "<div role=\"tabpanel\">\r\n  <!-- Nav tabs -->\r\n  <ul class=\"nav nav-pills\" role=\"tablist\">\r\n    <li role=\"presentation\" class=\"active\"><a href=\"#created\" aria-controls=\"created\" role=\"tab\" data-toggle=\"tab\">created</a></li>\r\n    <li role=\"presentation\"><a href=\"#edited\" aria-controls=\"edited\" role=\"tab\" data-toggle=\"tab\">edited</a></li>\r\n    <li role=\"presentation\"><a href=\"#voted\" aria-controls=\"voted\" role=\"tab\" data-toggle=\"tab\">voted</a></li>\r\n  </ul>\r\n  <!-- Tab panes -->\r\n  <div class=\"tab-content\">\r\n    <div role=\"tabpanel\" class=\"tab-pane active\" id=\"created\">\r\n      {{_1+claims+creator plus type search|content|content;structure:claim item}}\r\n    </div>\r\n    <div role=\"tabpanel\" class=\"tab-pane\" id=\"edited\">\r\n      {{_1+claims+editor plus type search|content|content;structure:claim item}}\r\n    </div>\r\n    <div role=\"tabpanel\" class=\"tab-pane\" id=\"voted\">\r\n      Hello {{_1+claims+voter plus type search|content|content;structure:claim item}}\r\n    </div>\r\n  </div>\r\n</div>"
+      },
+      {
+        "name": "my metrics+*right+*structure",
+        "type": "Search",
+        "content": "{\"type\":\"Metric\",\"left\":\"_self\"}"
+      },
+      {
+        "name": "source+icon",
+        "type": "Phrase",
+        "content": "globe"
+      },
+      {
+        "name": "metric+icon",
+        "type": "Phrase",
+        "content": "bar-chart-o"
+      },
+      {
+        "name": "claim+icon",
+        "type": "Phrase",
+        "content": "quote-left"
+      },
+      {
+        "name": "User+Sources+*type_plus_right+*structure",
+        "type": "Search",
+        "content": "{\"type\":\"Page\",\"created_by\":\"_\",\"limit\":\"10\"}"
+      },
+      {
+        "name": "User+Claims+*type plus right+*structure",
+        "type": "Search",
+        "content": "{\"type\":\"Claim\",\"created_by\":\"_\",\"limit\":\"10\"}"
+      },
+      {
+        "name": "User+metrics+*type plus right+*structure",
+        "type": "Search",
+        "content": "{\"type\":\"Metric\",\"left\":\"_self\"}"
+      },
+      {
+        "name": "export",
+        "type": "Pointer",
+        "content": "[[my contributions+*right+*structure]]\n[[my sources+*right+*structure]]\n[[my claims+*right+*structure]]\n[[my metrics+*right+*structure]]\n[[source+icon]]\n[[metric+icon]]\n[[claim+icon]]\n[[User+source+*type plus right+*structure]]\n[[User+claims+*type plus right+*structure]]\n[[User+metrics+*type plus right+*structure]]\n[[export]]\n[[User+*type+*structure]]\n[[showcase+*right+*structure]]\n[[script: showcase]]\n[[campaign+icon]]\n[[article+icon]]\n[[claim drag item]]\n[[source drag item]]\n[[article drag item]]\n[[metric drag item]]\n[[campaign drag item]]\n[[script: wikirate scripts]]\n[[style: profile page]]\n[[customized classic skin]]\n[[my metrics]]\n[[my sources]]\n[[my claims]]\n[[my campaigns]]\n[[my articles]]\n[[creator plus type search+*right+*structure]]\n[[editor plus type search+*right+*structure]]\n[[voter plus type search+*right+*structure]]"
+      },
+      {
+        "name": "User+*type+*structure",
+        "type": "HTML",
+        "content": "<div class=\"container-fluid\">\r\n  <div class=\"row\">\r\n    <div class=\"col-md-3\">\r\n      {{+Image|size:large;}}\r\n      {{+About me|open;hide:menu toggle;title:About}}\r\n      {{+*follow|open;hide:menu toggle;title:Following|content;structure:User following result row}}\r\n      {{+activity|open;title:Activity;hide:menu toggle}}\r\n    </div>\r\n    <div class=\"col-md-9\">\r\n      {{+showcase|title:Showcase;open;hide:menu toggle}}\r\n      {{+my contributions|title:My Contributions;open;hide:menu toggle}}\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n\r\n\r\n\r\n\r\n<div class=\"join-date\" >Joined {{_self| created_at}} ago</div>\r\n<div class=\"user-profile-left\">\r\n  {{+Image|size:large;}}\r\n\r\n    <table style=\"width:100%\">\r\n      <tr>\r\n        <td>\r\n          Claims:\r\n        </td>\r\n        <td>{{+claim count|core}}</td>\r\n      </tr>\r\n      <tr>\r\n        <td>Sources:</td>\r\n        <td>{{+source count}}</td>\r\n      </tr>\r\n      <tr>\r\n        <td>Articles Edited:</td>\r\n        <td>{{+article count}}</td>\r\n      </tr>\r\n    </table>\r\n<br />\r\n{{+*follow|hide:menu|content;structure:User following result row}}\r\n</div>\r\n<div class=\"user-profile-right\">\r\n  <div class=\"user-profile-right-top \">\r\n           <div class=\"panel-title panel-heading\">About me</div>\r\n\r\n<br />\r\n    {{+About me}}\r\n  </div>\r\n\r\n    <div class=\"user-profile-right-bottom-contribution\">\r\n        <div class=\"panel-title panel-heading\">Contributions</div>\r\n        <div   role=\"tabpanel\" >\r\n         <ul  class=\"nav nav-tabs\" role=\"tablist\">\r\n          <li role=\"presentation\" class=\"active\"><a href=\"#user-profile-claim\" role=\"tab\" data-toggle=\"tab\">Claims</a>\r\n          </li>\r\n          <li role=\"presentation\" ><a href=\"#user-profile-analyses\" role=\"tab\" data-toggle=\"tab\">Articles</a>\r\n          </li>\r\n          <li role=\"presentation\" ><a href=\"#user-profile-source\" role=\"tab\" data-toggle=\"tab\">Source</a>\r\n          </li>\r\n        </ul>\r\n        <div class=\"tab-content\">\r\n          <div  id=\"user-profile-analyses\" role=\"tabpanel\" class=\"tab-pane\">\r\n            {{+Analyses||content;structure:user_profile_claim_row}}\r\n          </div>\r\n          <div id=\"user-profile-claim\" role=\"tabpanel\" class=\"tab-pane active\">\r\n            {{+Claims||content;structure:user_profile_claim_row}}\r\n          </div>\r\n          <div id=\"user-profile-source\" role=\"tabpanel\" class=\"tab-pane\">\r\n            {{+Sources||core;structure:user profile source row}}\r\n          </div>\r\n        </div>\r\n      </div>\r\n\r\n    </div>\r\n    \r\n      {{+Discussion|titled;title:Discussion;show:comment_box,menu}}\r\n  \r\n\r\n</div>"
+      },
+      {
+        "name": "showcase+*right+*structure",
+        "type": "Basic",
+        "content": "<p>{{+campaigns|showcase_list|content;structure:campaign item}}</p>\r\n<p>{{+metrics|showcase_list|content;structure: metric item}}</p>\r\n<p>{{+claims|showcase_list|content;structure:claim item}}</p>\r\n<p>{{+sources|showcase_list|content;structure:source item}}</p>\r\n<p>{{+articles|showcase_list|content;structure:article item}}</p>"
+      },
+      {
+        "name": "script: showcase",
+        "type": "CoffeeScript",
+        "content": "$( document ).ready ->\r\n  handleShowcaseDropEvent = ( event, ui ) ->\r\n    console.log(\"drag item arrived\")\r\n    drag_item = $(ui.item)\r\n    origin_list_id = $(drag_item).slot().attr('id')\r\n    item_card_id = $(drag_item.children()[0]).data('card-id')\r\n    $target = $('#showcase-'+origin_list_id)\r\n    $target.show()\r\n    $target.removeClass('hidden')\r\n    $target.append(drag_item)\r\n    update_url = $target.data('update-url')\r\n    $.ajax\r\n      url: update_url\r\n      type: 'PUT'\r\n      #success: \r\n    $.get(update_url+'?add_item='+item_card_id)\r\n\r\n\r\n  #old_list = null\r\n\r\n  #handleShowcaseStopEvent = (event, ui) ->\r\n  #  new_list = ui.item.parent()\r\n  #  if !new_list.parent().is(old_list.parent())\r\n  #    $( this ).sortable( \"cancel\" )\r\n\r\n  $('.TYPE_PLUS_RIGHT-user-showcase').sortable\r\n    connectWith: 'TYPE_PLUS_RIGHT-user-my_contribution'\r\n    items: \".search-result-item.item-content\"\r\n    update: handleShowcaseDropEvent\r\n    #start: handleStartEvent\r\n    #stop: handleShowcaseStopEvent\r\n    dropOnEmpty: true\r\n    revert: false\r\n  \r\n  $('.TYPE_PLUS_RIGHT-user-my_contribution .search-result-item.item-content').draggable\r\n    revert: true\r\n    connectToSortable: \".TYPE_PLUS_RIGHT-user-showcase\"\r\n    \r\n  \r\n"
+      },
+      {
+        "name": "campaign+icon",
+        "type": "Phrase",
+        "content": "bullhorn"
+      },
+      {
+        "name": "articles+icon",
+        "type": "Phrase",
+        "content": "toggle-on"
+      },
+      {
+        "name": "claim drag item",
+        "type": "HTML",
+        "content": "<div class=\"drag-item\">\r\n{{_+*vote count}}\r\n<div class=\"item-content\">\r\n{{_+citation count|related_article_modal_box}}\r\n  <div class=\"item-summary\">\r\n    <div class=\"claim-name\"> \r\n    <h4><i class=\"fa fa-quote-left\"></i>\r\n    [[_]]\r\n    <i class=\"fa fa-quote-right\"></i>\r\n    </h4>\r\n   <div class=\"last-edit\">\r\n      {{_|structure:creator credit}}\r\n   </div>\r\n    </div> \r\n   <div class=\"claim-tag\">\r\n      <i class=\"fa fa-tag\"></i>{{+Companies||link}}\r\n      {{+Topics||link}}\r\n    </div>\r\n    <div class=\"claim-sourcelink\">\r\n      <i class=\"fa\">{{source icon3|core;size:icon}}</i>\r\n        {{+Source||core; structure: source link}}\r\n    </div>\r\n  </div>\r\n</div>\r\n</div>"
+      },
+      "",
+      "",
+      {
+        "name": "metric drag item",
+        "type": "HTML",
+        "content": "  <div class=\"metric-item\">\r\n    <div class=\"header\">\r\n      <div class=\"handle\">\r\n        <span class=\"glyphicon glyphicon-option-vertical\"></span>\r\n      </div>\r\n      {{_l+*vote count}}\r\n      <div class=\"logo\">\r\n        {{_ll+logo|core;size:small}} \r\n      </div>\r\n      <div class=\"name\">\r\n        {{_lr|name}}\r\n      </div>\r\n    </div>\r\n    <div class=\"data\">\r\n      <div class=\"data-item hide-with-details\">\r\n        {{_self+latest value|concise}}\r\n      </div>\r\n      <div class=\"data-item show-with-details text-center\">\r\n        <span class=\"label label-metric\">[[_l|Metric Details]]</span> \r\n      </div>\r\n      <div class=\"details-toggle\" data-append=\"metric_details\">\r\n        <span class=\"glyphicon glyphicon-triangle-right\"></span>\r\n      </div>\r\n    </div>\r\n    <div class=\"details\">\r\n    </div>\r\n  </div>"
+      },
+      "",
+      {
+        "name": "script: wikirate scripts",
+        "type": "Pointer",
+        "content": "[[script: new claim page]]\n[[script: new source page]]\n[[homepage carousel init]]\n[[homepage ie8 handling script]]\n[[webpage source preview script]]\n[[claim chosen]]\n[[modal window script]]\n[[activate readmore script]]\n[[suggested source script]]\n[[empty tab content script]]\n[[script: filter search]]\n[[wikirate coffee]]\n[[script: article page]]\n[[script: rating]]\n[[script: metrics]]\n[[import_page_script]]\n[[script: showcase]]"
+      },
+      {
+        "name": "style: profile page",
+        "type": "SCSS",
+        "content": ".activity {\r\n  font-size: 0.8em;\r\n  white-space: nowrap;\r\n  overflow-x: hidden;\r\n  span {\r\n    vertical-align: top;\r\n  }\r\n  .glyphicon {\r\n    margin-top: 4px;\r\n    font-size: 0.6em;\r\n  }\r\n  div {\r\n    display: inline-block;\r\n  }\r\n}\r\n\r\n.open-view.TYPE_PLUS_RIGHT-user-Xfollow > .card-frame > .card-header > .card-header-title {\r\n  width: 100%;\r\n  a {\r\n    float: right;\r\n    color: #03998d;\r\n    font-size: 0.8em;\r\n  }\r\n}\r\n\r\n.open-view.TYPE_PLUS_RIGHT-user-my_contribution > .card-frame > .card-header {\r\n  padding: 0;\r\n  > .card-header-title {\r\n    > .card-title {\r\n      float: left;\r\n    }\r\n    width: 100%;\r\n    text-align: center;\r\n    .counts {\r\n      border-left: 1px solid black;\r\n      display: inline-block;\r\n      > .item {\r\n        text-align: center;\r\n        padding: 0px 10px 0px 10px;\r\n        background: white;\r\n        border-right: 1px solid black;\r\n        display: inline-block;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n\r\n"
+      },
+      {
+        "name": "customized classic skin",
+        "type": "Skin",
+        "content": "[[bootstrap default skin]]\n[[*css]]\n[[layout with sidebar scss]]\n[[chosen style]]\n[[top bar scss]]\n[[slick scss]]\n[[article item scss]]\n[[company and topic item scss]]\n[[homepage layout scss]]\n[[style: wikirate bootstrap buttons]]\n[[style: user following list]]\n[[style: wikirate bootstrap navbar]]\n[[style: wikirate bootstrap form]]\n[[style: wikirate bootstrap common]]\n[[style: wikirate metrics]]\n[[style: yinyang]]\n[[style: profile page]]"
+      },
+      {
+        "name": "my metrics",
+        "type": "Basic",
+        "content": ""
+      },
+      {
+        "name": "my sources",
+        "type": "Basic",
+        "content": ""
+      },
+      {
+        "name": "my claims",
+        "type": "Basic",
+        "content": ""
+      },
+      "",
+      "",
+      {
+        "name": "creator plus type search+*right+*structure",
+        "type": "Search",
+        "content": "{\"type\":\"_2\",\"created_by\":\"_1\"}"
+      },
+      {
+        "name": "editor plus type search+*right+*structure",
+        "type": "Search",
+        "content": "{\"type\":\"_2\",\"edited_by\":\"_1\"}"
+      },
+      {
+        "name": "voter plus type search+*right+*structure",
+        "type": "Search",
+        "content": "{\"type\":\"_2\",\"linked_to_by\":{\"left\":\"_1\",\"right\":[\"in\",\"*upvotes\",\"*downvotes\"]}}"
+      }
+    ]
+  }
+}

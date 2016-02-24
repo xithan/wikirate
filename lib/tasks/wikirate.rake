@@ -72,10 +72,10 @@ namespace :wikirate do
         case location
         when 'dev'
           'dev.wikirate.org'
-        when 'production'
-          'wikirate.org'
-        else
+        when 'local'
           '127.0.0.1:3000'
+        else
+          'wikirate.org'
         end
       url = "http://#{export_location}/production_export.json?export=true"
       export = open(url, read_timeout: 50000).read

@@ -1,14 +1,14 @@
 describe Card::Set::LtypeRtype::Metric::WikirateCompany do
   context "metric values updated" do
-    let(:metric) { get_a_sample_metric :number }
-    let(:company) { get_a_sample_company }
+    let(:metric) { sample_metric :number }
+    let(:company) { sample_company }
     let(:mv_id) { Card::MetricValueID }
 
     before do
       login_as "joe_admin"
-      subcard =
-        get_subcards_of_metric_value metric, company, "33", "2015", nil
-      @metric_value = Card.create type_id: mv_id, subcards: subcard
+      @metric_value =
+        Card.create type_id: mv_id,
+                    subcards: create_answer(metric, company, "33", "2015", nil)
       @metric_company = Card.fetch "#{metric.name}+#{company.name}"
     end
     describe "creating a metric value" do

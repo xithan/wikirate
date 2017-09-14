@@ -17,7 +17,7 @@ format :html do
       if params[:general_overview] && params[:company]
         content_class = "related-articles cited-articles " \
                         "related-overviews cited-overviews"
-        body += content_tag :div, class: content_class  do
+        body += wrap_with :div, class: content_class  do
           link_to_card "#{params[:company]}+notes_page",
                        "Cite in General Overview",
                        path: { citable: claim.cardname.url_key,
@@ -53,16 +53,19 @@ format :html do
   def analysis_links analysis_name, cited=false
     company_name = %(<span class="company">#{analysis_name.to_name.trunk_name}</span>)
     topic_name   = %(<span class="topic">#{analysis_name.to_name.tag_name}</span>)
-    simple_link  = %([[#{analysis_name}|#{company_name}#{topic_name}]])
+    simple_link =
+      link_to_card analysis_name, "#{company_name}#{topic_name}"
 
     citation_link = cited ? "" : citation_link(analysis_name.to_name)
 
-    process_content %(<div class=\"analysis-link\">#{simple_link} #{citation_link}</div>)
+    %(<div class=\"analysis-link\">#{simple_link} #{citation_link}</div>)
   end
 
   def citation_link analysis_name
-    opts = { edit_article: true }
-    opts[:citable] = card.cardname.trunk_name
-    %( <span class="claim-next-action">[[/#{analysis_name.url_key}?#{opts.to_param} | Cite!]]</span> )
+    opts = { edit_article: true,
+             citable: card.cardname.trunk_name }
+    wrap_with :span, class: "claim-next-action" do
+      link_to_card analysis_name, "Cite!", path: opts
+    end
   end
 end

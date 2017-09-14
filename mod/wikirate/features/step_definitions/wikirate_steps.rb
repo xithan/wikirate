@@ -1,6 +1,37 @@
+module Capybara
+  module Node
+    module Actions
+      def choose_value el, value
+        id = el["id"]
+        session.execute_script("$('##{id}').val('#{value}')")
+        session.execute_script("$('##{id}').trigger('chosen:updated')")
+        session.execute_script("$('##{id}').change()")
 
+        # code below doesn't work on wikirate because if you select an item in
+        # a very long list the list gets pushed below the navigation bar
+        # find("label", text: field)
+        #   .find(:xpath,"..//a[@class='chosen-single']")
+        #   .click
+        # li = find("li", text: value, visible: false)
+        # li.click
+        # # If the list element is too far down the list then the first click
+        # # scrolls it up but doesn't select it. It needs another click.
+        # # A selected item is no longer visible (because the list disappears)
+        # if li.visible?
+        #   li.click
+        # end
+      end
+    end
+  end
+end
 
-Capybara.default_wait_time = 120
+#
+# When /^(?:|I )single-select "([^"]*)" from "([^"]*)"$/ do |value, field|
+#   select =
+#     find("label", text: field).find(:xpath, "..//select", visible: false)
+# end
+
+Capybara.default_max_wait_time = 60
 
 When(/^I press "([^\"]*)" within "([^\"]*)"$/) do |button, scope_selector|
   within(scope_selector) do
@@ -8,19 +39,27 @@ When(/^I press "([^\"]*)" within "([^\"]*)"$/) do |button, scope_selector|
   end
 end
 
-When(/^I wait until ajax response$/) do
-  Timeout.timeout(Capybara.default_wait_time) do
-    sleep(0.5) while page.evaluate_script("jQuery.active") != 0
-  end
-end
+# When(/^I wait for ajax response$/) do
+#  Timeout.timeout(Capybara.default_wait_time) do
+#    sleep(0.5) while page.evaluate_script("jQuery.active") != 0
+#  end
+# end
 
 When(/^I print html of the page$/) do
   puts page.html
 end
 
-regax =
+And(/^I click on item "([^"]*)"$/) do |item|
+  find("td", text: item).click
+end
+
+When(/^I click on metric "([^"]*)"$/) do |metric|
+  find(:css, ".add-formula").find("h4", text: metric).click
+end
+
+When(
   /^(?:|I )fill in "([^"]*)" with card path of source with link "([^"]*)"$/
-When(regax) do |field, value|
+) do |field, value|
   duplicates = Card::Set::Self::Source.find_duplicates value
   duplicated_card = duplicates.first.left if duplicates.any?
 
@@ -69,9 +108,9 @@ When(/^I fill in company with "([^"]*)"$/) do |company|
   fill_in_pointer_field :company, company
 end
 
-When(/^I fill in year with "([^"]*)"$/) do |year|
-  fill_in_pointer_field :year, year
-end
+# When(/^I fill in year with "([^"]*)"$/) do |year|
+#   fill_in_pointer_field :year, year
+# end
 
 When(/^I fill in value with "([^"]*)"$/) do |value|
   fill_in_value value
@@ -93,7 +132,7 @@ When(regax) do |company, year, value|
 end
 
 def fill_in_pointer_field name, value
-  within "form > fieldset.editor > .RIGHT-#{name}" do
+  within "fieldset.editor .RIGHT-#{name}" do
     fill_in "pointer_item", with: value
   end
 end
@@ -107,12 +146,9 @@ When(/^(?:|I )select "([^"]*)" from hidden "([^"]*)"$/) do |value, field|
   find(:xpath, "//input[@id='#{field}']", visible: false).set value
 end
 
-When(/^(?:|I )upload the (.+) "(.+)" in mod$/) do |attachment_name, filename|
-  script = "$('input[type=file]').css('opacity','1');"
-  page.driver.browser.execute_script(script)
-  file =
-    File.join Cardio.root, "mod", "wikirate", "features", "support", filename
-  attach_file "card_#{attachment_name}", file
+When /^(?:|I )single-select "([^"]*)" as value$/ do |value|
+  find("#card_subcards__values_content_chosen a.chosen-single").click
+  find("li", text: value).click
 end
 
 Then(/^I should see a row with "(.+)"$/) do |value|
@@ -144,6 +180,18 @@ Then(/^I check checkbox in row (\d+)$/) do |row|
   end
 end
 
+Then(/^I check checkbox for csv row (\d+)$/) do |row|
+  table = find("table")
+  within(table) do
+    row = find("tr[data-csv-row-index='#{row}'")
+    # row = all("tr")[row.to_i]
+    within(row) do
+      checkbox = find("input[type=checkbox]")
+      checkbox.click unless checkbox.checked?
+    end
+  end
+end
+
 Then(/^I fill in "(.*)" in row (\d+)$/) do |text, row|
   table = find("table")
   within(table) do
@@ -154,40 +202,56 @@ Then(/^I fill in "(.*)" in row (\d+)$/) do |text, row|
   end
 end
 
-Then(/^I should see a comment icon$/) do
-  html = page.body
-  expect(html).to have_tag("i",
-                           with: { class: "fa-commenting",
-                                   title: "Has comments" })
+Then(/^I fill in "(.*)" for csv row (\d+)$/) do |text, row|
+  table = find("table")
+  within(table) do
+    row = find("tr[data-csv-row-index='#{row}'")
+    within(row) do
+      find("input[type=text]").set(text)
+    end
+  end
 end
 
-Then(/^I should not see a comment icon$/) do
-  html = page.body
-  expect(html).to_not have_tag("i",
-                               with: { class: "fa-commenting",
-                                       title: "Has comments" })
+Then /^(?:|I )should see "([^"]*)" or "([^"]*)"$/ do |text1, text2|
+  begin
+    expect(page).to have_content(text1)
+  rescue
+    expect(page).to have_content(text2)
+  end
+end
+
+Then(/^I should see a "(.*)" icon$/) do |icon|
+  expect(page.body).to have_tag "i.fa-#{ICONS[icon]}"
+end
+
+Then(/^I should see a "(.*)" icon with tooltip "(.*)"$/) do |icon, title|
+  expect(page.body)
+    .to have_tag("i", with: { class: "fa-#{ICONS[icon]}", title: title })
+end
+
+Then(/^I should not see a "(.*)" icon$/) do |icon|
+  expect(page.body).to_not have_tag "i.fa-#{ICONS[icon]}"
 end
 
 When(/^I click the drop down button$/) do
   find(".fa-caret-right").click
 end
 
-When(/^I scroll (-?\d+) pixels$/) do |number|
-  page.execute_script "window.scrollBy(0, #{number})"
+When(/^I click the drop down button for "(.*)"$/) do |text|
+  find("td", text: text).find(:xpath, "..")
+                        .find(".fa-caret-right").click
 end
 
 def select_from_chosen item_text, selector, within
   within(within) do
-    field = find_field(selector, visible: false)
-    get_value =
-      "$(\"##{field[:id]} option:contains('#{item_text}')\").val()"
-    option_value = page.evaluate_script(get_value)
-    add_value =
-      "value = ['#{option_value}']\; if ($('##{field[:id]}').val()) "\
-      "{$.merge(value, $('##{field[:id]}').val())}"
-    page.execute_script(add_value)
-    option_value = page.evaluate_script("value")
-    update_chosen_select_value field[:id], option_value
+    id = find_field(selector, visible: false)[:id]
+    option_value = page.execute_script(%(
+      val1 = $(\"##{id} option:contains('#{item_text}')\").val();
+      value = [val1];
+      if ($('##{id}').val()) {$.merge(value, $('##{id}').val())}
+      return value
+    ))
+    update_chosen_select_value id, option_value
   end
 end
 
@@ -204,6 +268,24 @@ When(/^I press link button "(.*)"$/) do |name|
   find("a", text: name, visible: false).click
 end
 
+When(/^(?:|I )click! on "([^"]*)"$/) do |link|
+  click_link_or_button(link, visible: false)
+end
+
 When(/^I maximize the browser$/) do
   page.driver.browser.manage.window.maximize
+end
+
+ICONS = {
+  "check request" => "check-circle-o",
+  "comment" => "commenting",
+  "remove" => "times-circle-o"
+}.freeze
+
+When(/^I click on the "(.*)" icon$/) do |icon|
+  find(:css, "i.fa.fa-#{ICONS[icon]}").click
+end
+
+And(/^I hover over "([^"]*)"$/) do |text|
+  find(:link_or_button, text: text).hover
 end

@@ -3,30 +3,12 @@ include_set Abstract::Import
 
 attachment :source_import_file, uploader: CarrierWave::FileCardUploader
 
-event :import_source_csv, :prepare_to_store,
-      on: :update,
-      when: proc { Env.params["is_source_import_update"] == "true" } do
-  return unless (sources = Env.params[:sources])
-  return unless valid_import_format?(sources)
-  source_map = {}
-  success.params[:slot] = {
-    updated_sources: [],
-    duplicated_sources: []
-  }
-  sources.each do |source|
-    source_card = parse_source_card source, source_map
-    if source_card
-      source_card.director.catch_up_to_stage :validate
-      source_card.director.transact_in_stage = :integrate
-    end
-    handle_import_errors source_card
-  end
-  clear_slot_params
-  handle_redirect
+def success_params
+  [:updated_sources, :duplicated_sources]
 end
 
 # @return updated or created metric value card object
-def parse_source_card source, source_map
+def parse_import_row source, source_map
   args = process_data source
   return if check_duplication_within_file args, source_map
   return unless valid_value_data? args
@@ -114,41 +96,38 @@ def handle_duplicated_source source_card, source_hash
   updated = false
   updated |= update_title_card source_card, source_hash
   updated |= update_existing_source source_card, source_hash
-  if updated
-    slot_args = success.slot
-    msg_array = [source_hash[:row].to_s, source_card.name]
-    slot_args[:updated_sources].push(msg_array)
-  end
+  return unless updated
+  msg_array = [source_hash[:row].to_s, source_card.name]
+  success[:updated_sources].push(msg_array)
 end
 
 def check_duplication_within_file source_hash, source_map
-  slot_args = success.slot
   source_url = source_hash[:source]
   if source_map[source_url]
     msg = [source_hash[:row].to_s, source_url]
-    slot_args[:duplicated_sources].push(msg)
+    success.params[:duplicated_sources].push(msg)
     return true
   end
   false
 end
 
 def valid_value_data? args
-  @import_errors = []
-  %w(wikirate_company year report_type source).each do |field|
-    add_import_error "#{field} missing", args[:row] if args[field.to_sym].blank?
+  collect_import_errors(args[:row]) do
+    %w[company year report_type source].each do |field|
+      check_if_filled_in field, args
+    end
   end
-  @import_errors.empty?
 end
 
 format :html do
   include Type::MetricValueImportFile::HtmlFormat
   def default_import_table_args args
     args[:table_header] = ["Select", "#",  "Company in File",
-                           "Company in Wikirate", "Match",
-                           "Correction",
+                           "Company in Wikirate",
+                           "Corrected Company",
                            "Year", "Report Type", "Source", "Title"]
     args[:table_fields] = [:checkbox, :row, :file_company,
-                           :wikirate_company, :status, :correction,
+                           :wikirate_company, :correction,
                            :year, :report_type, :source, :title]
   end
 
@@ -164,13 +143,13 @@ format :html do
     end
   end
 
-  def contruct_import_warning_message args
+  def construct_import_warning_message
     msg = ""
-    if (updated_sources = args[:updated_sources])
+    if (updated_sources = Env.params[:updated_sources])
       headline = "Existing sources updated"
       msg += duplicated_value_warning_message headline, updated_sources
     end
-    if (duplicated_sources = args[:duplicated_sources])
+    if (duplicated_sources = Env.params[:duplicated_sources])
       headline = "Duplicated sources in import file."\
                  " Only the first one is used."
       msg += duplicated_value_warning_message headline, duplicated_sources
@@ -178,20 +157,13 @@ format :html do
     msg
   end
 
-  view :import do |args|
-    new_args = args.merge(hidden: { success: { id: "_self", view: :open } })
-    frame_and_form :update, new_args, "notify-success" => "import successful" do
-      [
-        _optional_render(:source_import_flag, args),
-        _optional_render(:selection_checkbox, args),
-        _optional_render(:import_table, args),
-        _optional_render(:button_formgroup, args)
-      ]
-    end
+  view :import do
+    voo.hide :metric_select, :year_select
+    super()
   end
 
-  view :source_import_flag do |_args|
-    hidden_field_tag :is_source_import_update, "true"
+  view :import_flag do
+    hidden_field_tag :is_data_import, "true"
   end
 
   def import_fields
@@ -204,17 +176,20 @@ format :html do
       default_title =
         "#{row_hash[:company]}-#{row_hash[:report_type]}-#{row_hash[:year]}"
     end
-    text_field_tag("title[#{row_hash[:row]}]", default_title)
+    text_field_tag("title[#{row_hash[:row]}]", default_title,
+                   class: "min-width-300")
   end
 
-  def prepare_import_row_data row, index
-    data = super row, index
-    data[:title] = title_field data
-    data
+  def finalize_row row, index
+    row[:row] = index
+    row[:checkbox] = import_checkbox row
+    row[:correction] = data_correction row
+    row[:title] = title_field row
+    row
   end
-
-  def import_checkbox row_hash
-    key_hash, checked = prepare_import_checkbox row_hash
-    check_box_tag "sources[]", key_hash.to_json, checked
-  end
+  # def prepare_import_row_data row, index
+  #   data = super row, index
+  #   data[:title] = title_field data
+  #   data
+  # end
 end

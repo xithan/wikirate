@@ -46,13 +46,13 @@ end
 
 def refresh_all
   results = []
-  %w(wikirate_company_type value source).each do |r|
+  %w[wikirate_company_type value source].each do |r|
     results += find_left_right_cached_count "metric", r
   end
-  %w(metric topic source note).each do |r|
+  %w[metric topic source note].each do |r|
     results += find_left_right_cached_count "wikirate_company", r
   end
-  %w(metric company source note).each do |r|
+  %w[metric company source note].each do |r|
     results += find_left_right_cached_count "wikirate_topic", r
   end
   results
@@ -67,7 +67,6 @@ silent_mode do
       left_right = ARGV[0].split("+")
       find_left_right_cached_count left_right[0], left_right[1]
     end
-  # binding.pry
   cards.each do |card|
     puts "Refreshing #{card.name}'s cached count".green
     card.update_cached_count

@@ -1,8 +1,8 @@
 include Card::Set::Abstract::Calculation
 
 format :html do
-  def default_title_args args
-    args[:title] ||= "Log in"
+  def default_title_args _args
+    voo.title ||= "Log in"
   end
 
   def default_core_args args={}

@@ -1,22 +1,30 @@
-
+# Loader animation
 $.extend wikirate:
   ajaxLoader: { head: '#ajax_loader', child: '.loader-anime'}
+  initRowRemove: ($button) ->
+    $button =  $("._remove_row") unless $button
+    $button.each () ->
+      $this = $(this)
+      $this.on 'click', ->
+        $this.closest('tr').remove()
   isString: (val) ->
     typeof val == 'string' ? true : false
   jObj: (ele) ->
     if this.isString(ele) then $(ele) else ele
-  loader: (target) ->
+  loader: (target, relative = false) ->
     fn = this
-    Target = fn.jObj(target)
-    Loader = fn.ajaxLoader
+    target = fn.jObj(target)
+    loader = fn.ajaxLoader
     isLoading: ->
       if this.child().exists() then true else false
     add: ->
-      Target.append($(Loader.head).html()) unless this.isLoading()
+      return if this.isLoading()
+      target.append($(loader.head).html())
+      this.child().addClass("relative") if relative
     remove: ->
       this.child().remove()
     child: ->
-      Target.find(Loader.child)
+      target.find(loader.child)
 
 window.wikirate = $.wikirate
 
@@ -28,29 +36,47 @@ $.urlParam = (name) ->
   else
     results[1] or 0
 
+# Check if container exist
 $.fn.exists = -> return this.length>0
 
-$(document).ready ->
-  $('[data-toggle="collapse"]').click ->
-    if typeof $(this).data('collapseintext') != 'undefined'
-      collapseOutText = $(this).data('collapseouttext')
-      collapseInText = $(this).data('collapseintext')
-      $(this).text (i, old) ->
-        if old == collapseOutText then collapseInText else collapseOutText
-    return
-    
-  $('body').on 'click.collapse-next', '[data-toggle=collapse-next]', ->
-    $this     = $(this)
-    parent    = $this.data("parent")
-    collapse  = $this.data("collapse")+".collapse"
-    $target   = $this.closest(parent).find(collapse)
+decko.slotReady (slot) ->
+  # use jQuery chosen library for select tags
+#  slot.find('.pointer-multiselect').each (i) ->
+#    $(this).attr 'data-placeholder', '　'
+#    unless $(this).hasClass("_no-chosen")
+#      $(this).chosen
+#        no_results_text: 'Press Enter to add new'
+#        skip_no_results: true
+#        width: '100%'
+#
+#  slot.find('.pointer-select').each (i) ->
+#    $(this).attr 'data-placeholder', '　'
+#
+#    unless $(this).hasClass("_no-chosen")
+#      $(this).chosen
+#        no_results_text: 'No Result'
+#        disable_search_threshold: 10
+#        skip_no_results: true
+#        width: '100%'
 
-    if !$target.data('collapse')
-      $target.collapse('toggle').on('shown.bs.collapse', ->
-        $this.parent().find('.fa-caret-right ')
-                      .removeClass('fa-caret-right ')
-                      .addClass 'fa-caret-down'
-      ).on 'hidden.bs.collapse', ->
-        $this.parent().find('.fa-caret-down')
-                      .removeClass('fa-caret-right')
-                      .addClass 'fa-caret-right'
+  slot.find('.company_autocomplete').autocomplete
+    source: '/Companies+*right+*options.json?view=name_match'
+    minLength: 2
+  slot.find('.wikirate_company_autocomplete').autocomplete
+    source: '/Companies+*right+*options.json?view=name_match'
+    minLength: 2
+  slot.find('.wikirate_topic_autocomplete').autocomplete
+    source: '/Topic+*right+*options.json?view=name_match'
+    minLength: 2
+  slot.find('.metric_autocomplete').autocomplete
+    source: '/Metric+*right+*options.json?view=name_match'
+    minLength: 2
+
+  wikirate.initRowRemove(slot.find("._remove_row"))
+
+# destory modal content after closing modal window (On homepage only)
+$(document).ready ->
+  if $('#Home').exists()
+    $('#modal-main-slot').on 'hidden.bs.modal', ->
+      $(this).data 'bs.modal', null
+      $(this).find('.modal-body').empty()

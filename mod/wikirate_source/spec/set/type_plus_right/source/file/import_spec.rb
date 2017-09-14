@@ -2,7 +2,7 @@ describe Card::Set::TypePlusRight::Source::File::Import do
   before do
     login_as "joe_user"
     @source = create_source file: csv1
-    Card::Env.params["is_metric_import_update"] = "true"
+    Card::Env.params["is_data_import"] = "true"
   end
   let(:csv1) do
     File.open File.expand_path("../import_test.csv", __FILE__)
@@ -12,19 +12,19 @@ describe Card::Set::TypePlusRight::Source::File::Import do
   end
   let(:metric) { "Access to Nutrition Index+Marketing Score" }
 
-  def metric_answer_exists? company
-    Card.exists?(metric_answer_name(company))
+  def answer_exists? company
+    Card.exists?(answer_name(company))
   end
 
   def metric_value company
-    Card[metric_answer_name(company) + "+value"].content
+    Card[answer_name(company) + "+value"].content
   end
 
-  def metric_answer_card company
-    Card[metric_answer_name(company)]
+  def answer_card company
+    Card[answer_name(company)]
   end
 
-  def metric_answer_name company
+  def answer_name company
     metric + "+" + company_name(company) + "+2015"
   end
 
@@ -33,7 +33,7 @@ describe Card::Set::TypePlusRight::Source::File::Import do
   end
 
   def trigger_import data, file=nil
-    Card::Env.params[:metric_values] = data
+    Card::Env.params[:import_data] = data
     source = file ? create_source(file: file) : @source
     source_file = source.fetch trait: :file
     metric = Card["Access to Nutrition Index+Marketing Score"]
@@ -88,9 +88,9 @@ describe Card::Set::TypePlusRight::Source::File::Import do
     end
     describe "metric value does not fit value type" do
       it "shows errors" do
-        metric = get_a_sample_metric :number
+        metric = sample_metric :number
         source_file = @source.fetch trait: :file
-        Card::Env.params[:metric_values] = [
+        Card::Env.params[:import_data] = [
           { company: "Amazon.com, Inc.", value: "hello world", row: 1 }
         ]
         trigger_source_file_update source_file, metric
@@ -105,17 +105,17 @@ describe Card::Set::TypePlusRight::Source::File::Import do
         { company: "Amazon.com, Inc.", value: "9" },
         { company: "Apple Inc.",  value: "62" }
       ]
-      expect(metric_answer_exists?(:amazon)).to be true
-      expect(metric_answer_exists?(:apple)).to be true
+      expect(answer_exists?(:amazon)).to be true
+      expect(answer_exists?(:apple)).to be true
 
       expect(metric_value(:amazon)).to eq("9")
       expect(metric_value(:apple)).to eq("62")
     end
     context "duplicated metric value" do
       it "blocks adding" do
-        metric = get_a_sample_metric :number
+        metric = sample_metric :number
         source_file = @source.fetch trait: :file
-        Card::Env.params[:metric_values] = [
+        Card::Env.params[:import_data] = [
           { company: "Amazon.com, Inc.", value: "55", row: 1 },
           { company: "Amazon.com, Inc.", value: "66", row: 2 }
         ]
@@ -128,13 +128,13 @@ describe Card::Set::TypePlusRight::Source::File::Import do
     end
     context "existing metric value with different value" do
       it "blocks adding" do
-        metric = get_a_sample_metric :number
+        metric = sample_metric :number
         source_file = @source.fetch trait: :file
-        Card::Env.params[:metric_values] = [
+        Card::Env.params[:import_data] = [
           { company: "Amazon.com, Inc.", value: "55", row: 1 }
         ]
         trigger_source_file_update source_file, metric
-        Card::Env.params[:metric_values] = [
+        Card::Env.params[:import_data] = [
           { company: "Amazon.com, Inc.", value: "56", row: 1 }
         ]
         trigger_source_file_update source_file, metric
@@ -148,9 +148,9 @@ describe Card::Set::TypePlusRight::Source::File::Import do
     context "existing metric value with same value" do
       context "with different source" do
         it "won't update source" do
-          metric = get_a_sample_metric :number
+          metric = sample_metric :number
           source_file = @source.fetch trait: :file
-          Card::Env.params[:metric_values] = [
+          Card::Env.params[:import_data] = [
             { company: "Amazon.com, Inc.", value: "55", row: 1 }
           ]
           trigger_source_file_update source_file, metric
@@ -171,16 +171,16 @@ describe Card::Set::TypePlusRight::Source::File::Import do
           "3" => "Amazon.com, Inc."
         }
         trigger_import [
-          { company: "Amazon.com, Inc.", value: "9", row: 1 },
-          { company: "Apple Inc.",       value: "62", row: 2 },
-          { company: "Sony Corporation", value: "13", row: 3 }
+          { file_company: "Amazon.com, Inc.", value: "9", row: 1 },
+          { file_company: "Apple Inc.",       value: "62", row: 2 },
+          { file_company: "Sony Corporation", value: "13", row: 3 }
         ]
       end
 
       it "uses the correction name as company names" do
-        expect(metric_answer_exists?(:amazon)).to be true
-        expect(metric_answer_exists?(:apple)).to be true
-        expect(metric_answer_exists?(:sony)).to be true
+        expect(answer_exists?(:amazon)).to be true
+        expect(answer_exists?(:apple)).to be true
+        expect(answer_exists?(:sony)).to be true
 
         expect(metric_value(:amazon)).to eq("13")
         expect(metric_value(:apple)).to eq("9")
@@ -200,10 +200,11 @@ describe Card::Set::TypePlusRight::Source::File::Import do
       context "input company doesn't exist in wikirate" do
         it "creates company and the value" do
           Card::Env.params[:corrected_company_name] = {
-            "1" => "Cambridge University" }
+            "1" => "Cambridge University"
+          }
           trigger_import [{ company: "Cambridge", value: "800", row: 1 }]
           expect(Card.exists?("Cambridge University")).to be true
-          expect(metric_answer_exists?(:cambridge_university)).to be true
+          expect(answer_exists?(:cambridge_university)).to be true
           expect(metric_value(:cambridge_university)).to eq("800")
         end
       end
@@ -213,7 +214,7 @@ describe Card::Set::TypePlusRight::Source::File::Import do
         it "creates company and the value" do
           trigger_import [{ company: "Cambridge", value: "800" }]
           expect(Card.exists?("Cambridge")).to be true
-          expect(metric_answer_exists?(:cambridge)).to be true
+          expect(answer_exists?(:cambridge)).to be true
           expect(metric_value(:cambridge)).to eq("800")
         end
       end
@@ -222,7 +223,7 @@ describe Card::Set::TypePlusRight::Source::File::Import do
     # context 'metric value exists' do
     #   it 'updates metric values' do
     #     trigger_import [{ company: "Amazon.com, Inc.", value:'9' }]
-    #     expect(metric_answer_exists?(:amazon)).to be true
+    #     expect(answer_exists?(:amazon)).to be true
     #     expect(metric_value(:amazon)).to eq('9')
     #
     #     trigger_import [{ company: "Amazon.com, Inc.", value: '999' }]
@@ -235,8 +236,8 @@ describe Card::Set::TypePlusRight::Source::File::Import do
   #   it 'updates correct metric values' do
   #     trigger_import [{ company: 'Amazon.com, Inc.', value: '9' },
   #                     { company: 'Apple Inc.', value: '62' }]
-  #     expect(metric_answer_exists?(:amazon)).to be true
-  #     expect(metric_answer_exists?(:apple)).to be true
+  #     expect(answer_exists?(:amazon)).to be true
+  #     expect(answer_exists?(:apple)).to be true
   #
   #     expect(metric_value(:amazon)).to eq('9')
   #     expect(metric_value(:apple)).to eq('62')
@@ -252,11 +253,11 @@ describe Card::Set::TypePlusRight::Source::File::Import do
   #     expect(metric_value(:apple)).to eq('689')
   #   end
   # end
-  def with_row checked, args
-    with = { type: "checkbox", id: "metric_values_",
+  def with_row checked, context, args
+    with = { type: "checkbox", id: "import_data_",
              value: args.to_json }
     with[:checked] = "checked" if checked
-    with_tag "tr" do
+    with_tag "tr[class=\"#{context}\"]" do
       with_tag "input", with: with
       with_tag "td", text: args[:file_company]
       if args[:wikirate_company].present?
@@ -267,18 +268,18 @@ describe Card::Set::TypePlusRight::Source::File::Import do
         type: "text", name: "corrected_company_name[#{args[:row]}]"
       }]
       with_tag *input_args if args[:status] != "exact"
-      with_tag "td", text: args[:status]
     end
   end
 
   describe "while rendering import view" do
     subject { @source.fetch(trait: :file).format.render_import }
+
     it "shows metric select list correctly" do
       is_expected.to have_tag("div", with: {
                                 card_name: "#{@source.name}+Metric"
                               }) do
         with_tag "input", with: {
-          class: "card-content form-control",
+          class: "d0-card-content form-control",
           id: "card_subcards_#{@source.name}_Metric_content"
         }
       end
@@ -288,47 +289,51 @@ describe Card::Set::TypePlusRight::Source::File::Import do
                                 card_name: "#{@source.name}+Year"
                               }) do
         with_tag "input", with: {
-          class: "card-content form-control",
+          class: "d0-card-content form-control",
           id: "card_subcards_#{@source.name}_Year_content"
         }
       end
     end
-    it "contains hidden flag is_metric_import_update" do
+    it "contains hidden flag is_data_import" do
       is_expected.to have_tag("input", with: {
-                                id: "is_metric_import_update", value: "true",
+                                id: "is_data_import", value: "true",
                                 type: "hidden"
                               })
     end
     it "renders table correctly" do
       is_expected.to have_tag("table", with: { class: "import_table" }) do
-        with_row false,
+        with_row false, "danger",
                  file_company: "Cambridge",
                  value: "43",
-                 row: 1,
+                 csv_row_index: 1,
                  wikirate_company: "",
                  status: "none",
-                 company: "Cambridge"
-        with_row true,
+                 company: "Cambridge",
+                 row: 1
+        with_row true, "info",
                  file_company: "amazon.com",
                  value: "9",
-                 row: 2,
+                 csv_row_index: 2,
                  wikirate_company: "Amazon.com, Inc.",
                  status: "alias",
-                 company: "Amazon.com, Inc."
-        with_row true,
+                 company: "Amazon.com, Inc.",
+                 row: 3
+        with_row true, "success",
                  file_company: "Apple Inc.",
                  value: "62",
-                 row: 3,
+                 csv_row_index: 3,
                  wikirate_company: "Apple Inc.",
                  status: "exact",
-                 company: "Apple Inc."
-        with_row true,
-                 file_company: "Sony C",
+                 company: "Apple Inc.",
+                 row: 4
+        with_row true, "warning",
+                 file_company: "Sony",
                  value: "33",
-                 row: 4,
+                 csv_row_index: 4,
                  wikirate_company: "Sony Corporation",
                  status: "partial",
-                 company: "Sony Corporation"
+                 company: "Sony Corporation",
+                 row: 2
       end
     end
   end

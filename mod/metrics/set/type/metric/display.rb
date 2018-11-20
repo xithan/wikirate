@@ -23,7 +23,7 @@ format :html do
     wrap_with :div, class: "contribution company-count p-2" do
       [
         wrap_with(:span, company_count, class: "badge badge-secondary"),
-        wrap_with(:span, "Companies", class: "text-muted")
+        wrap_with(:span, rate_subjects, class: "text-muted")
       ]
     end
   end

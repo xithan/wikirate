@@ -39,9 +39,9 @@ PATH
 PATH
   remote: vendor/decko
   specs:
-    card (1.96.2)
+    card (1.96.4)
       bootstrap4-kaminari-views (~> 1.0)
-      cardname (= 0.6.2)
+      cardname (= 0.6.4)
       carrierwave (= 1.2.2)
       coderay (~> 1.1)
       coffee-script (~> 2.4)
@@ -59,11 +59,11 @@ PATH
       twitter (~> 6.1)
       uglifier (~> 3.2)
       uuid (~> 2.3)
-    cardname (0.6.2)
+    cardname (0.6.4)
       activesupport (~> 5.1)
       htmlentities (~> 4.3)
-    decko (0.6.2)
-      card (= 1.96.2)
+    decko (0.6.4)
+      card (= 1.96.4)
 
 GEM
   remote: http://rubygems.org/
@@ -559,7 +559,7 @@ GEM
       json (>= 1.8)
       nokogiri (~> 1.5)
       trollop (~> 2.1)
-    recaptcha (4.12.0)
+    recaptcha (4.13.0)
       json
     ref (2.0.0)
     rest-client (2.0.2)

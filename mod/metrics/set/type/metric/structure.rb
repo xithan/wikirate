@@ -92,7 +92,7 @@ format :html do
   end
 
   view :box_bottom, template: :haml do
-    @company_badge = labeled_badge company_count, "Companies", color: "company"
+    @company_badge = labeled_badge company_count, rate_subjects, color: "company"
     @answer_badge = labeled_badge metric_count, "Answers", color: "dark"
   end
 

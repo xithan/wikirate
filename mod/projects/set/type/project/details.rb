@@ -92,7 +92,7 @@ format :html do
     wrap_with :span do
       [
         wrap_with(:span, card.num_companies, class: "badge badge-company"),
-        wrap_with(:span, "Companies", class: "mr-2"),
+        wrap_with(:span, rate_subjects, class: "mr-2"),
         wrap_with(:span, card.num_metrics, class: "badge badge-metric"),
         wrap_with(:span, "Metrics", class: "mr-2")
       ]
